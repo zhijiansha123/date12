@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>日期</title>
+<style>
+* {
+	margin: 0 auto;
+	padding:0;
+}
+body {
+	max-width: 640px;
+	height: auto;
+	overflow: hidden;
+}
+.right {
+	float: right;
+}
+.date {
+	width: 100%;
+	height: auto;
+	overflow: hidden;
+	padding: 10px;
+	box-sizing: border-box;
+	background: ivory;
+}
+.title span {
+	cursor: pointer;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select:none;
+}
+.title_date {
+	width: 80%;
+	height:auto;
+	overflow:hidden;
+	display: inline-block;
+	text-align: center;
+	color: #990000;
+	font-weight: bold;
+}
+.margin_bottom_10 {
+	margin-bottom: 10px;
+}
+.week {
+	width: 100%;
+}
+.week span, .number span {
+	width: 14%;
+	display: inline-block;
+	float: left;
+	text-align: center;
+}
+.number span {
+	color: #93C;
+	margin-bottom: 10px;
+}
+.number span.day2{ color:#F0F;}
+.number span.red{ color:#F00; font-weight:bold;}
+.dis_none{ display:none;}
+.dis_block{ display:block;}
+</style>
+</head>
+
+<body>
+<h1>Date</h1>
+<h5>Date()	返回当日的日期和时间。</h5>
+<h5> getDate()	从 Date 对象返回一个月中的某一天 (1 ~ 31)。</h5>
+<h5> getDay()	从 Date 对象返回一周中的某一天 (0 ~ 6)。</h5>
+<h5> getMonth()	从 Date 对象返回月份 (0 ~ 11)。</h5>
+<h5 class="margin_bottom_10"> getFullYear()	从 Date 对象以四位数字返回年份。</h5>
+ <input value="点击出现相应的日期……" id="input1"  onfocus = "createTab(this)"/>
+          <div id = "rlContainter"></div>
+<!--<div class="date ">
+  <div class="title margin_bottom_10"><span class="right">NEXT</span><span class="left">PRE</span><span class="title_date"></span></div>
+  <div class="week margin_bottom_10"><span>日</span> <span>一</span> <span>二</span> <span>三</span> <span>四</span> <span>五</span> <span>六</span></div>
+  <div class="number"></div>
+</div>
+--><script>
+function createTab(ele){
+ if(!document.getElementsByClassName('date').item(0)){
+    /*date最外层*/
+	var oDate=document.createElement('div');
+	    oDate.className="date";
+	/*上月  年月日  下月*/
+	var title=document.createElement('div');
+	title.className="title margin_bottom_10";
+	
+	var pre=document.createElement('span');
+	    pre.className="left";
+		pre.innerHTML="PRE";
+		title.appendChild(pre);
+		
+	var titleDate=document.createElement('span');
+	    titleDate.className="title_date";
+		title.appendChild(titleDate);
+		
+	var next=document.createElement('span');
+	    next.className="right";
+		next.innerHTML="NEXT";
+		title.appendChild(next);
+	 oDate.appendChild(title);	
+	/*星期*/
+	var week=document.createElement('div');
+	    week.className="week margin_bottom_10";
+	var weekArray=['日','一','二','三','四','五','六'];
+	    for(var i=0; i<weekArray.length;i++){
+		  var oSpan=document.createElement('span');
+		      oSpan.innerHTML=weekArray[i];
+		      week.appendChild(oSpan);	
+		}
+	oDate.appendChild(week);
+	document.body.appendChild(oDate);
+ }	
+ 
+  var date=new Date,
+	    month1=date.getMonth(),
+		year=date.getFullYear();
+		day=date.getDate();
+  //console.log("外面："+year+month1+day)
+	    titleDate.innerHTML=year+"年"+(month1+1)+"月";
+  var oNum=document.createElement('div');
+      oNum.className="number";
+	  oDate.appendChild(oNum);
+	//console.log("month:"+month+"\n"+"year:"+year)  
+  pre.onclick=function(){activeMonth(--month1)}
+  next.onclick=function(){activeMonth(++month1)}
+  activeMonth(month1);
+  
+  function activeMonth(m){
+	    oNum.innerHTML="";
+		var activeDate=new Date(year,m,1);
+		var month=activeDate.getMonth();
+		titleDate.innerHTML=activeDate.getFullYear()+"年"+(month+1)+"月";
+		var diff=1-activeDate.getDay();
+		if(diff==1)diff=-6;
+		activeDate.setDate(diff);//这个是难点。算出日历起始日期
+		
+	for(var i=0;i<42;i++){
+	var date=activeDate.getDate(),
+	    cMonth=activeDate.getMonth(),
+		cYear=activeDate.getFullYear();
+	var oSpan=document.createElement('span');
+	     oSpan.innerHTML=activeDate.getDate();	
+		 activeDate.setDate(activeDate.getDate()+1);
+		 oNum.appendChild(oSpan);
+		 //区别当月日期与其他月份的日期
+		 if(cMonth!=month){
+		   oSpan.className="day2"; 
+		 } 
+		//当年 当月 当天的日期区别其他日期
+		var tt=new Date,
+		    mon=tt.getMonth();
+		if(date===day&&cMonth===mon&&cYear===year){
+			console.log("cMonth:"+cMonth+"\n"+"month1:"+month1)
+						  oSpan.className="red"; //当年、当月、当天的日期区别于其他日期
+		}
+		//li点击时出现在文本框中相应日期
+		oSpan.dateValue=cYear+"-"+(cMonth+1)+"-"+date;
+		oSpan.onclick=function(){
+			ele.value=this.dateValue;
+			oDate.parentNode.removeChild(oDate);
+			oDate=null;
+		}
+		 
+	}
+	
+  }
+}
+</script>
+</body>
+</html>
